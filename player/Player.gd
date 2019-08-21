@@ -9,14 +9,22 @@ const HIDE_SPEED = 40
 #Objetos
 var movedir = Vector2()
 var spritedir = Vector2()
+	
+#funcion que checkea el estado del personaje para mostrar animaciones
+func _ready():
+	pass
+	#TODO: state_machine = $AnimationTree.get(paremeters_player)
 
 #funcion que controla el movimiento y las animaciones
 func _physics_process(delta):
-	controls_loop()
-	movement_loop()
-	spritedir_loop()
-	
- 
+	_controls_loop()
+	_movement_loop()
+	_spritedir_loop()
+	_animloader_loop()
+	#TODO: _spritestate_loop()
+
+#funcion que cambia la animacion en funcion del entorno
+func _animloader_loop():
 	if movedir != Vector2.ZERO:
 	 	if is_on_wall():
 	 		if test_move(transform, spritedir):
@@ -27,48 +35,84 @@ func _physics_process(delta):
 		anim_switch("Idle")
 
 #funcion que altera el movimiento en funcion de los inputs de teclado: proyecto/ajustes/mapa_de_entrada
-func controls_loop():
-	var LEFT = Input.is_action_pressed("ui_left")
-	var RIGHT = Input.is_action_pressed("ui_right")
-	var UP = Input.is_action_pressed("ui_up")
-	var DOWN = Input.is_action_pressed("ui_down")
- 
-	movedir.x = -int(LEFT) + int(RIGHT)
-	movedir.y = -int(UP) + int(DOWN)
+func _controls_loop():
+	movement()
 
-#funcion que aplica el movimiento introducido (por controls_loop()) y normalizado a la constante SPEED
-func movement_loop():
+#funcion que aplica el movimiento introducido (por _controls_loop()) y normalizado a la constante SPEED
+func _movement_loop():
 	var linear_velocity
 	var floor_normal = Vector2(0,0)
-	if Input.is_action_pressed("ui_hide"): 
+	if input.hide():
 		linear_velocity = movedir.normalized() * HIDE_SPEED
 	else:
 		linear_velocity = movedir.normalized() * SPEED
 	move_and_slide(linear_velocity, floor_normal)
 
 #funcion que checkea si movedir se mueve y no es infinito para actualizar la posicion del spirte
-func spritedir_loop():
+func _spritedir_loop():
 	if movedir != Vector2.ZERO && movedir != Vector2.INF:
 		spritedir = movedir
 
+
+
+################## MEMBER FUNCTIONS ##########################
+
 #funcion que devuelve la direccion en string
-func direction_to_string(direction:Vector2) -> String:
+func action_to_String(direction:Vector2) -> String:
 	if direction.x == -1:
 		return "Left"
-	elif direction.x == 1:
+	if direction.x == 1:
 		return "Right"
-	elif direction.y == -1:
+	if direction.y == -1:
 		return "Up"
-	return "Down"
+	if direction.y == 1:
+		return "Down"
+	if input.hide():
+		return "Hide"
+	if die():
+		return "Die" #TODO: create "Die" animation
+	return "Down" #TODO: create "Idle" animation  
 
 #funcion que actualiza la animacion en funcion de la direccion
 func anim_switch(anim):
-	var newanim = str(anim,direction_to_string(spritedir))
+	var newanim = str(anim,action_to_String(spritedir))
 	if $Anim.current_animation != newanim:
 		$Anim.play(newanim)
 		
 
-	
+#funcion que devuelve el input de teclado
+class input:
+	static func left():
+		return int(Input.is_action_pressed("ui_left"))
+	static func right():
+		return int(Input.is_action_pressed("ui_right"))
+	static func up():
+		return int(Input.is_action_pressed("ui_up"))
+	static func down():
+		return int(Input.is_action_pressed("ui_down"))
+	static func attack1():
+		return Input.is_action_pressed("ui_attack1")
+	static func hide():
+		return Input.is_action_pressed("ui_hide")
+
+#funcion que describe el movimiento
+func movement():
+	movedir.x = -input.left() + input.right()
+	movedir.y = -input.up() + input.down()
+
+func hurt():
+	#TODO: boolean that returns true if damage
+	pass
+
+func die():
+	#TODO: boolean that returns true if die
+	set_physics_process(false)
+	return true
+
+func _on_SwordHit_area_entered(area):
+	if area.is_in_group("hurtbox"):
+		pass#area.take_damage()
+	return true
 
 
 
