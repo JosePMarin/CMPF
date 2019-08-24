@@ -5,6 +5,7 @@ extends KinematicBody2D
 #Variables constantes
 const SPEED = 120
 const HIDE_SPEED = 40
+var DEATH=false
 
 #Objetos
 var movedir = Vector2()
@@ -106,15 +107,12 @@ func hurt():
 
 func die():
 	#TODO: boolean that returns true if die
-	set_physics_process(false)
-	return true
+	if DEATH:
+		set_physics_process(false)
+		return true
+	return false
 
 func _on_SwordHit_area_entered(area):
 	if area.is_in_group("hurtbox"):
 		pass#area.take_damage()
 	return true
-
-
-
-
-
