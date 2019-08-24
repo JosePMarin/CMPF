@@ -15,7 +15,7 @@ var spritedir = Vector2()
 #funcion que checkea el estado del personaje para mostrar animaciones
 func _ready():
 	pass
-	#TODO: state_machine = $AnimationTree.get(paremeters_player)
+	#TODO: state_machine = $AnimationTree.get(paremeters_player) TEST
 
 #funcion que controla el movimiento y las animaciones
 func _physics_process(delta):
