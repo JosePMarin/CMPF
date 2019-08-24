@@ -40,12 +40,12 @@ RELEASE 1:
   funcion push:
     si estoy al lado de un objeto movible, lo mueve a velocidad SPEEDPUSH=SPEEDHIDE en todas direcciones
 -------------------------------------------------------
--script attack1
-
--------------------------------------------------------
 -script npc:
   movimiento: persigue al player y cuando esta a rango ataca
   healt: 100
+  func attack1:
+    ataque basico sin arma
+    DAMAGE=20
 -------------------------------------------------------
 
 RELEASE 2:
