@@ -56,6 +56,12 @@ func _spritedir_loop():
 	if movedir != Vector2.ZERO && movedir != Vector2.INF:
 		spritedir = movedir
 
+func _healthstate_loop():
+	if HEALTH<=0:
+		DEATH=true
+	
+
+
 ################## MEMBER FUNCTIONS ##########################
 
 #funcion que devuelve la direccion en string
@@ -105,13 +111,8 @@ func hurt():
 	#TODO: boolean that returns true if damage
 	pass
 	
-func _healthstate_loop():
-	if HEALTH<=0:
-		DEATH=true
-	
-
 func die():
-	if DEATH:
+	if DEATH is true:
 		set_physics_process(false)
 		return true
 	return false
