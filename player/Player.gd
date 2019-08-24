@@ -112,7 +112,7 @@ func hurt():
 	pass
 	
 func die():
-	if DEATH is true:
+	if DEATH:
 		set_physics_process(false)
 		return true
 	return false
