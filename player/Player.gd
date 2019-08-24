@@ -6,6 +6,7 @@ extends KinematicBody2D
 const SPEED = 120
 const HIDE_SPEED = 40
 var DEATH=false
+var HEALTH = 100
 
 #Objetos
 var movedir = Vector2()
@@ -18,6 +19,7 @@ func _ready():
 
 #funcion que controla el movimiento y las animaciones
 func _physics_process(delta):
+	_healthstate_loop()
 	_controls_loop()
 	_movement_loop()
 	_spritedir_loop()
@@ -104,9 +106,13 @@ func movement():
 func hurt():
 	#TODO: boolean that returns true if damage
 	pass
+	
+func _healthstate_loop():
+	if HEALTH<=0:
+		DEATH=true
+	
 
 func die():
-	#TODO: boolean that returns true if die
 	if DEATH:
 		set_physics_process(false)
 		return true
