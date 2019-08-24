@@ -56,8 +56,6 @@ func _spritedir_loop():
 	if movedir != Vector2.ZERO && movedir != Vector2.INF:
 		spritedir = movedir
 
-
-
 ################## MEMBER FUNCTIONS ##########################
 
 #funcion que devuelve la direccion en string
