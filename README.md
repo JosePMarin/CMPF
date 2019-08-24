@@ -3,7 +3,7 @@
 -------------------------------------------------------
 RELEASE 1:
 -------------------------------------------------------
--animacion player
+-animacion player:
   animacion hide ->in progress
   animacion idle -> in progress 
   animacion die
@@ -13,7 +13,7 @@ RELEASE 1:
   animacion push
   animacion attackchain
 -------------------------------------------------------
--animacion npc
+-animacion npc:
   animacion movimiento -> Done
   animacion idle -> in progress
   animacion hurt
@@ -50,7 +50,7 @@ RELEASE 1:
 
 RELEASE 2:
 -------------------------------------------------------
--animacion player
+-animacion player:
   animacion talk
   animacion attackrange
 -------------------------------------------------------
