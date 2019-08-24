@@ -1,10 +1,13 @@
 # CMPF
 
-
+-------------------------------------------------------
 RELEASE 1:
 -------------------------------------------------------
 -animacion player
   animacion hide ->in progress
+  animacion idle -> in progress 
+  animacion die
+  animacion hurt
   animacion attack1 
   animacion dash
   animacion push
@@ -12,7 +15,8 @@ RELEASE 1:
 -------------------------------------------------------
 -animacion npc
   animacion movimiento -> Done
-  animacion idle -> in progress 
+  animacion idle -> in progress
+  animacion hurt
   animacion die
   animacion attack1
 -------------------------------------------------------
@@ -45,13 +49,13 @@ RELEASE 1:
 -------------------------------------------------------
 
 RELEASE 2:
+-------------------------------------------------------
 -animacion player
   animacion talk
   animacion attackrange
-   
+-------------------------------------------------------
 -script Player:   
   funcion talk:
-  
   func attackrange:
     DAMAGE variable en funcion de carga
       si carga = 0:
