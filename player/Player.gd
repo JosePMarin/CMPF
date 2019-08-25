@@ -16,7 +16,7 @@ var damage=0
 #Objetos
 var movedir = Vector2()
 var spritedir = Vector2()
-var hurt_ref=hurt(damage)
+var hurt_ref=0
 
 	
 #funcion que checkea el estado del personaje para mostrar animaciones
@@ -57,8 +57,7 @@ func _movement_loop():
 	var floor_normal = Vector2(0,0)
 	if is_on_wall():
 		hurt(50)
-	if input.hide():
-		hurt(20)
+	if input.hide():		
 		linear_velocity = movedir.normalized() * HIDE_SPEED
 	else:
 		linear_velocity = movedir.normalized() * SPEED
@@ -79,22 +78,24 @@ func _staminastate_loop():
 
 #funcion que devuelve el estado de health en funcion de delta(frames)
 func _healthstate_loop(hurt_ref):
-
+	
+	print ("primero: ",int(hurt_ref))
+	
 	if HEALTH<=0:
 		print ("death")
 		DEATH=true
 		return false
 	else:
-		if HEALTH<100:
-			print ("regenerating health")
-			HEALTH+=HEALTH_REGEN
-			return HEALTH
 		print ("damage: ",int(hurt_ref))
 		if hurt_ref:
 			HEALTH-=int(hurt_ref)
 			print ("health after damage= ", HEALTH)
 			return HEALTH
 		print ("current health= ", HEALTH)
+		if HEALTH<100:
+			print ("regenerating health")
+			HEALTH+=HEALTH_REGEN
+			return HEALTH
 	
 	
 
@@ -149,6 +150,7 @@ func hurt(damage):
 	if damage!=0:
 		damage_dealt=damage
 		damage=0
+		hurt_ref=damage_dealt
 		return damage_dealt
 	else:
 		return false
