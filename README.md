@@ -55,6 +55,7 @@ RELEASE 2:
 -animacion player:
   animacion talk
   animacion attackrange
+  animacion healthbar
 -------------------------------------------------------
 -script Player:   
   funcion talk:
