@@ -80,6 +80,7 @@ func _movement_loop():
 		else:
         	damage_dealt=0
 		if input.hide():
+			hurt(1)
 			linear_velocity = movedir.normalized() * HIDE_SPEED
 		else:
 			linear_velocity = movedir.normalized() * SPEED
@@ -100,15 +101,13 @@ func _staminastate_loop():
 
 #funcion que devueve el health de stamina en funcion de delta(frames)
 func _healthRegen_loop():
-	if inicioSegundo:
+	if inicioSegundo && !DEATH && !hurted:
 		if HEALTH<100:
 			print ("regenerating health")
-			print ("HEALTH_REGEN: ",int(HEALTH_REGEN))
-			print ("HEALTH antes: ",int(HEALTH))
 			HEALTH+=HEALTH_REGEN
+			if HEALTH >100:
+				HEALTH=100
 			print ("HEALTH actual: ",int(HEALTH))
-		#print ("stamina= ", STAMINA)
-		return STAMINA
 
 #funcion que devueve el health de stamina en funcion de delta(frames)
 func _hurted_delay():
