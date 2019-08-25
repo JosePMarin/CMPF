@@ -18,6 +18,9 @@ var hurted=false
 var hurtedTIME=0
 var fps= 60
 var inicioSegundo=false
+var time_start = OS.get_unix_time()
+var time_now = 0
+
 
 #Objetos
 var movedir = Vector2()
@@ -49,11 +52,22 @@ func _physics_process(delta):
 	#TODO: _spritestate_loop()
 	
 func _print_tiempo(TIME,TIME_AUX,delta):
-	if counter == fps:
-		print ("TIEMPO: ",int(TIME))
-		print ("health: ",HEALTH)
+	
+	if counter == fps:	
+		print ("HEALTH: ",HEALTH)
+		_pretty_time()
 		counter=0
 		inicioSegundo=true
+
+#funcion tiempo
+func _pretty_time():
+	time_now = OS.get_unix_time()
+	var elapsed = time_now - time_start
+	var minutes = elapsed / 60
+	var seconds = elapsed % 60
+	var str_elapsed = "%02d : %02d" % [minutes, seconds]
+	print("elapsed : ", str_elapsed)
+
 
 #funcion que cambia la animacion en funcion del entorno
 func _animloader_loop(delta):	
