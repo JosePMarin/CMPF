@@ -12,11 +12,17 @@ var TIME = 0
 var HEALTH_REGEN=2
 var STAMINA_REGEN=2
 var damage=0
+var counter=0
+var TIME_AUX=0
+var hurted=false
+var hurtedTIME=0
+var fps= 60
+var inicioSegundo=false
 
 #Objetos
 var movedir = Vector2()
 var spritedir = Vector2()
-var hurt_ref=0
+var damage_dealt=0
 
 	
 #funcion que checkea el estado del personaje para mostrar animaciones
@@ -27,16 +33,29 @@ func _ready():
 #funcion que controla el movimiento y las animaciones
 func _physics_process(delta):
 	TIME+=delta
+	_print_tiempo(TIME,TIME_AUX,delta)
 	_movement_loop()
 	_controls_loop()
 	_staminastate_loop()
-	_healthstate_loop(hurt_ref)
+	_healthstate_loop(damage_dealt)
 	_spritedir_loop()
 	_animloader_loop(delta)
+	_healthRegen_loop()
+	_hurted_delay()
+	#print ("TIME_AUX: ",int(TIME_AUX))
+	counter+=1
+	inicioSegundo=false
+
 	#TODO: _spritestate_loop()
+	
+func _print_tiempo(TIME,TIME_AUX,delta):
+	if counter == fps:
+		print ("TIEMPO: ",int(TIME))
+		counter=0
+		inicioSegundo=true
 
 #funcion que cambia la animacion en funcion del entorno
-func _animloader_loop(delta):
+func _animloader_loop(delta):	
 	if movedir != Vector2.ZERO:
 	 	if is_on_wall():
 	 		if test_move(transform, spritedir):
@@ -52,13 +71,15 @@ func _controls_loop():
 	#TODO: attak()
 
 #funcion que aplica el movimiento introducido (por _controls_loop()) y normalizado a la constante SPEED
-func _movement_loop():
+func _movement_loop():	
 	if DEATH==false:
 		var linear_velocity
 		var floor_normal = Vector2(0,0)
 		if is_on_wall():
-			hurt(50)
-		if input.hide():		
+			hurt(10)
+		else:
+          	hurt(0)           
+		if input.hide():
 			linear_velocity = movedir.normalized() * HIDE_SPEED
 		else:
 			linear_velocity = movedir.normalized() * SPEED
@@ -77,27 +98,39 @@ func _staminastate_loop():
 	#print ("stamina= ", STAMINA)
 	return STAMINA
 
+#funcion que devueve el health de stamina en funcion de delta(frames)
+func _healthRegen_loop():
+	if inicioSegundo:
+		if HEALTH<100:
+			print ("regenerating health")
+			print ("HEALTH_REGEN: ",int(HEALTH_REGEN))
+			print ("HEALTH antes: ",int(HEALTH))
+			HEALTH+=HEALTH_REGEN
+			print ("HEALTH actual: ",int(HEALTH))
+		#print ("stamina= ", STAMINA)
+		return STAMINA
+
+#funcion que devueve el health de stamina en funcion de delta(frames)
+func _hurted_delay():
+	if hurted && inicioSegundo:
+		hurted=false
+		print ("hurtedStatus= ", hurted)
+		
+
 #funcion que devuelve el estado de health en funcion de delta(frames)
 func _healthstate_loop(hurt_ref):
-	
-	if DEATH==false:		
+	if DEATH==false:
 		if HEALTH<=0:
 			print ("death")
 			DEATH=true
 			return false
 		else:
-			print ("damage: ",int(hurt_ref))
-			if hurt_ref:
+			if hurt_ref && !hurted:
 				HEALTH-=int(hurt_ref)
 				print ("health after damage= ", HEALTH)
+				hurted=true
+				print ("hurtedStatus= ", hurted)
 				return HEALTH
-			print ("current health= ", HEALTH)
-			if HEALTH<100:
-				print ("regenerating health")
-				HEALTH+=HEALTH_REGEN
-				return HEALTH
-	
-	
 
 
 ################## MEMBER FUNCTIONS ##########################
@@ -146,14 +179,13 @@ func movement():
 	movedir.y = -input.up() + input.down()
 
 func hurt(damage):
-	var damage_dealt
-	if damage!=0:
-		damage_dealt=damage
-		damage=0
-		hurt_ref=damage_dealt
-		return damage_dealt
-	else:
-		return false
+	if !hurted:
+		if damage!=0 && !hurted:
+			damage_dealt=damage
+			hurtedTIME=TIME
+			return damage_dealt
+		else:
+			return false
 
 func stamina():
 	return false
