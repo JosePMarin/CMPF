@@ -93,7 +93,7 @@ func _spritedir_loop():
 #funcion que devueve el estado de stamina en funcion de delta(frames)
 func _staminastate_loop():
 	if STAMINA<100:
-		print ("regenerating stamina")
+		#print ("regenerating stamina")
 		STAMINA+=STAMINA_REGEN
 	#print ("stamina= ", STAMINA)
 	return STAMINA
@@ -169,7 +169,7 @@ class input:
 	static func down():
 		return int(Input.is_action_pressed("ui_down"))
 	static func attack1():
-		return Input.is_action_pressed("ui_attack1")
+		return Input.is_action_just_pressed("ui_attack1")
 	static func hide():
 		return Input.is_action_pressed("ui_hide")
 
