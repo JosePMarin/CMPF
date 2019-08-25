@@ -14,13 +14,14 @@ var STAMINA_REGEN=1
 var damage=0
 var counter=0
 var TIME_AUX=0
-var hurted=false
-var hurtedTIME=0
+var delay=false
+var delay_time=0
 var fps= 60
-var inicioSegundo=false
+var inicio_segundo=false
+var stamina=0
+var stamina_cost=0
 var time_start = OS.get_unix_time()
 var time_now = 0
-
 
 #Objetos
 var movedir = Vector2()
@@ -36,41 +37,34 @@ func _ready():
 #funcion que controla el movimiento y las animaciones
 func _physics_process(delta):
 	TIME+=delta
-	_print_tiempo(TIME,TIME_AUX,delta)
+	_time(TIME,TIME_AUX,delta)
 	_movement_loop()
 	_controls_loop()
 	_staminaRegen_loop()
 	_healthstate_loop(damage_dealt)
+	_staminastate_loop(stamina_cost)
 	_spritedir_loop()
 	_animloader_loop(delta)
 	_healthRegen_loop()
-	_hurted_delay()
+	_delay()
 	#print ("TIME_AUX: ",int(TIME_AUX))
 	counter+=1
-	inicioSegundo=false
+	inicio_segundo=false
 
 	#TODO: _spritestate_loop()
 	
-func _print_tiempo(TIME,TIME_AUX,delta):
-	
-	if counter == fps:	
-		print ("HEALTH: ",HEALTH)
-		_pretty_time()
+func _time(TIME,TIME_AUX,delta):
+	if counter == fps:
+		print ("health: ",HEALTH)
+		pretty_time()
 		counter=0
-		inicioSegundo=true
+		inicio_segundo=true
 
-#funcion tiempo
-func _pretty_time():
-	time_now = OS.get_unix_time()
-	var elapsed = time_now - time_start
-	var minutes = elapsed / 60
-	var seconds = elapsed % 60
-	var str_elapsed = "%02d : %02d" % [minutes, seconds]
-	print("elapsed : ", str_elapsed)
-
-
+func _staminastate_loop(stamina_cost):
+	pass
+	
 #funcion que cambia la animacion en funcion del entorno
-func _animloader_loop(delta):	
+func _animloader_loop(delta):
 	if movedir != Vector2.ZERO:
 	 	if is_on_wall():
 	 		if test_move(transform, spritedir):
@@ -86,7 +80,7 @@ func _controls_loop():
 	#TODO: attak()
 
 #funcion que aplica el movimiento introducido (por _controls_loop()) y normalizado a la constante SPEED
-func _movement_loop():	
+func _movement_loop():
 	if DEATH==false:
 		var linear_velocity
 		var floor_normal = Vector2(0,0)
@@ -109,15 +103,18 @@ func _spritedir_loop():
 
 #funcion que devueve el estado de stamina en funcion de delta(frames)
 func _staminaRegen_loop():
-	if inicioSegundo:
+	if inicio_segundo && !DEATH && !delay:
 		if STAMINA<100:
-			#print ("regenerating stamina")
+			print ("regenerating stamina")
 			STAMINA+=STAMINA_REGEN
+			if STAMINA>100:
+				STAMINA=100
+			print ("STAMINA actual: ", int(STAMINA))
 
 
 #funcion que devueve el health de stamina en funcion de delta(frames)
 func _healthRegen_loop():
-	if inicioSegundo && !DEATH && !hurted:
+	if inicio_segundo && !DEATH && !delay:
 		if HEALTH<100:
 			print ("regenerating health")
 			HEALTH+=HEALTH_REGEN
@@ -126,10 +123,10 @@ func _healthRegen_loop():
 			print ("HEALTH actual: ",int(HEALTH))
 
 #funcion que devueve el health de stamina en funcion de delta(frames)
-func _hurted_delay():
-	if hurted && inicioSegundo:
-		hurted=false
-		print ("hurtedStatus= ", hurted)
+func _delay():
+	if delay && inicio_segundo:
+		delay=false
+		print ("delayStatus= ", delay)
 		
 
 #funcion que devuelve el estado de health en funcion de delta(frames)
@@ -140,15 +137,25 @@ func _healthstate_loop(damage_dealt):
 			DEATH=true
 			return false
 		else:
-			if damage_dealt && !hurted:
+			if damage_dealt && !delay:
 				HEALTH-=int(damage_dealt)
 				print ("health after damage= ", HEALTH)
-				hurted=true
-				print ("hurtedStatus= ", hurted)
+				delay=true
+				print ("delayStatus= ", delay)
 				return HEALTH
 
 
 ################## MEMBER FUNCTIONS ##########################
+
+
+#funcion tiempo
+func pretty_time():
+	time_now = OS.get_unix_time()
+	var elapsed = time_now - time_start
+	var minutes = elapsed / 60
+	var seconds = elapsed % 60
+	var str_elapsed = "%02d : %02d" % [minutes, seconds]
+	print("elapsed : ", str_elapsed)
 
 #funcion que devuelve la direccion en string
 func action_to_String(direction:Vector2) -> String:
@@ -193,17 +200,23 @@ func movement():
 	movedir.x = -input.left() + input.right()
 	movedir.y = -input.up() + input.down()
 
+func tired(stamina):
+	if !delay && stamina!=0:
+		stamina_cost=stamina
+		delay_time=TIME
+		return stamina_cost
+	else:
+		return false
+
+
 func hurt(damage):
-	if !hurted:
-		if damage!=0 && !hurted:
+	if !delay:
+		if damage!=0 && !delay:
 			damage_dealt=damage
-			hurtedTIME=TIME
+			delay_time=TIME
 			return damage_dealt
 		else:
 			return false
-
-func stamina():
-	return false
 	
 func die():
 	if DEATH==true:
