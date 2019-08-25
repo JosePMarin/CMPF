@@ -53,15 +53,16 @@ func _controls_loop():
 
 #funcion que aplica el movimiento introducido (por _controls_loop()) y normalizado a la constante SPEED
 func _movement_loop():
-	var linear_velocity
-	var floor_normal = Vector2(0,0)
-	if is_on_wall():
-		hurt(50)
-	if input.hide():		
-		linear_velocity = movedir.normalized() * HIDE_SPEED
-	else:
-		linear_velocity = movedir.normalized() * SPEED
-	move_and_slide(linear_velocity, floor_normal)
+	if DEATH==false:
+		var linear_velocity
+		var floor_normal = Vector2(0,0)
+		if is_on_wall():
+			hurt(50)
+		if input.hide():		
+			linear_velocity = movedir.normalized() * HIDE_SPEED
+		else:
+			linear_velocity = movedir.normalized() * SPEED
+		move_and_slide(linear_velocity, floor_normal)
 
 #funcion que checkea si movedir se mueve y no es infinito para actualizar la posicion del spirte
 func _spritedir_loop():
@@ -79,23 +80,22 @@ func _staminastate_loop():
 #funcion que devuelve el estado de health en funcion de delta(frames)
 func _healthstate_loop(hurt_ref):
 	
-	print ("primero: ",int(hurt_ref))
-	
-	if HEALTH<=0:
-		print ("death")
-		DEATH=true
-		return false
-	else:
-		print ("damage: ",int(hurt_ref))
-		if hurt_ref:
-			HEALTH-=int(hurt_ref)
-			print ("health after damage= ", HEALTH)
-			return HEALTH
-		print ("current health= ", HEALTH)
-		if HEALTH<100:
-			print ("regenerating health")
-			HEALTH+=HEALTH_REGEN
-			return HEALTH
+	if DEATH==false:		
+		if HEALTH<=0:
+			print ("death")
+			DEATH=true
+			return false
+		else:
+			print ("damage: ",int(hurt_ref))
+			if hurt_ref:
+				HEALTH-=int(hurt_ref)
+				print ("health after damage= ", HEALTH)
+				return HEALTH
+			print ("current health= ", HEALTH)
+			if HEALTH<100:
+				print ("regenerating health")
+				HEALTH+=HEALTH_REGEN
+				return HEALTH
 	
 	
 
