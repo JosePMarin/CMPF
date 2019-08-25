@@ -57,14 +57,14 @@ func _movement_loop():
 		var linear_velocity
 		var floor_normal = Vector2(0,0)
 		if is_on_wall():
+			print("is on wall")
 			hurt(2)
+		else: 
+			damage_dealt=0
 		if input.hide():
-			print ("pressed")
 			hurt(1)
 			linear_velocity = movedir.normalized() * HIDE_SPEED
 		else:
-			damage_dealt=0
-			print("not pressing hide")
 			linear_velocity = movedir.normalized() * SPEED
 		move_and_slide(linear_velocity, floor_normal)
 
@@ -76,7 +76,7 @@ func _spritedir_loop():
 #funcion que devueve el estado de stamina en funcion de delta(frames)
 func _staminastate_loop():
 	if STAMINA<100:
-		print ("regenerating stamina")
+		#print ("regenerating stamina")
 		STAMINA+=STAMINA_REGEN
 	#print ("stamina= ", STAMINA)
 	return STAMINA
@@ -90,17 +90,17 @@ func _healthstate_loop(damage_dealt):
 			DEATH=true
 			return false
 		else:
-			#print ("damage: ",int(damage_dealt))
+			#Reduccion de vida por daño
 			if damage_dealt:
 				HEALTH-=int(damage_dealt)
-				print ("health after damage= ", HEALTH)
+				print (HEALTH)
 				return HEALTH
-			print ("current health= ", HEALTH)
+			#Regeneracion de vida
 			if HEALTH<100:
-				print ("regenerating health")
 				HEALTH+=HEALTH_REGEN
+				print (HEALTH)
 				return HEALTH
-	
+		print (HEALTH)
 	
 
 
@@ -155,6 +155,7 @@ func hurt(damage):
 		damage=0
 		return damage_dealt
 	else:
+		damage_dealt=0
 		return false
 
 func stamina():
