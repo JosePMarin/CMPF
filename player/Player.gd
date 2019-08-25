@@ -8,7 +8,7 @@ const HIDE_SPEED = 40
 const TIRED_SPEED = 10
 var DEATH=false
 var HEALTH=100
-var STAMINA = 100
+var STAMINA = 10
 var TIME = 0
 var HEALTH_REGEN=1
 var STAMINA_REGEN=1
@@ -102,18 +102,21 @@ func _movement_loop():
 	if DEATH==false:
 		var linear_velocity
 		var floor_normal = Vector2(0,0)
+
 		if is_on_wall():
 			hurt(10)
 		else:
-        	damage_dealt=0
+			hurt(0)
+
 		if input.hide():
 			tired(1)
 			linear_velocity = movedir.normalized() * HIDE_SPEED
-		elif tired==true:
+
+		if tired==true:
 			hurt(1)
 			linear_velocity = movedir.normalized() * TIRED_SPEED
-		else:
-			stamina_cost=0
+		if tired==false && input.hide()==false:
+			tired(0)
 			hurt(0)
 			linear_velocity = movedir.normalized() * SPEED
 		move_and_slide(linear_velocity, floor_normal)
@@ -128,14 +131,15 @@ func _spritedir_loop():
 #funcion que devueve el estado de stamina en funcion de delta(frames)
 func _staminaRegen_loop():
 	if inicio_segundo && !DEATH && !delay:
-		if STAMINA<100 || STAMINA == 0 && tired:
-			tired=false
-			_logger_ ("regenerating stamina",STAMINA_REGEN)
+		if STAMINA<100 && tired==false:
+			_logger_ ("regenerating stamina", STAMINA_REGEN)
 			STAMINA+=STAMINA_REGEN
-			if STAMINA>100:
-				STAMINA=100
-			
-
+		elif STAMINA>0:
+			tired=false
+		elif STAMINA>100:
+			STAMINA=100
+		elif STAMINA == 0 && stamina_cost==0:
+			tired=false
 #funcion que devueve el health de stamina en funcion de delta(frames)
 func _healthRegen_loop():
 	if inicio_segundo && !DEATH && !delay:
@@ -159,22 +163,26 @@ func _healthstate_loop(damage_dealt):
 		if HEALTH<=0:
 			_logger_ ("death", true)
 			DEATH=true
-			return false
 		else:
 			if damage_dealt && !delay:
 				HEALTH-=int(damage_dealt)
+				if HEALTH<=0:
+					HEALTH=0
 				delay=true
 				return HEALTH
 
 func _staminastate_loop(stamina_cost):
 	if DEATH==false:
-		if STAMINA<=0:
+		if STAMINA==0:
 			tired=true
 			_logger_ ("tired",true)
-			return false
 		else:
+			_logger_ ("tired",false)
+			tired=false
 			if stamina_cost && !delay:
 				STAMINA-=int(stamina_cost)
+				if STAMINA<0:
+					STAMINA=0
 				delay=true
 				return STAMINA
 		
@@ -241,17 +249,18 @@ func tired(stamina):
 		delay_time=TIME
 		return stamina_cost
 	else:
+		stamina_cost=0
 		return false
 
 
 func hurt(damage):
-	if !delay:
-		if damage!=0 && !delay:
-			damage_dealt=damage
-			delay_time=TIME
-			return damage_dealt
-		else:
-			return false
+	if damage!=0 && !delay:
+		damage_dealt=damage
+		delay_time=TIME
+		return damage_dealt
+	else:
+		damage_dealt=0
+		return false
 	
 func die():
 	if DEATH==true:
