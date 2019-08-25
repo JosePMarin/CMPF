@@ -107,18 +107,16 @@ func _movement_loop():
 			hurt(10)
 		else:
 			hurt(0)
-
 		if input.hide():
 			tired(1)
 			linear_velocity = movedir.normalized() * HIDE_SPEED
-
 		if tired==true:
 			hurt(1)
 			linear_velocity = movedir.normalized() * TIRED_SPEED
-		if tired==false && input.hide()==false:
+		if input.hide()==false && tired==false:
 			tired(0)
 			hurt(0)
-			linear_velocity = movedir.normalized() * SPEED
+			linear_velocity = movedir.normalized() * SPEED	
 		move_and_slide(linear_velocity, floor_normal)
 		
 		
@@ -134,12 +132,9 @@ func _staminaRegen_loop():
 		if STAMINA<100 && tired==false:
 			_logger_ ("regenerating stamina", STAMINA_REGEN)
 			STAMINA+=STAMINA_REGEN
-		elif STAMINA>0:
-			tired=false
 		elif STAMINA>100:
 			STAMINA=100
-		elif STAMINA == 0 && stamina_cost==0:
-			tired=false
+			
 #funcion que devueve el health de stamina en funcion de delta(frames)
 func _healthRegen_loop():
 	if inicio_segundo && !DEATH && !delay:
@@ -173,11 +168,17 @@ func _healthstate_loop(damage_dealt):
 
 func _staminastate_loop(stamina_cost):
 	if DEATH==false:
+		_logger_ ("STAMINA",STAMINA)
+		_logger_ ("tired",tired)
+		_logger_ ("stamina_cost",stamina_cost)
 		if STAMINA==0:
 			tired=true
 			_logger_ ("tired",true)
+		elif STAMINA==0 && tired==true && stamina_cost==0:
+			_logger_ ("staminastate_tired",false)
+			tired=false
 		else:
-			_logger_ ("tired",false)
+			_logger_ ("staminastate_tired",false)
 			tired=false
 			if stamina_cost && !delay:
 				STAMINA-=int(stamina_cost)
