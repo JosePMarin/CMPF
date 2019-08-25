@@ -16,7 +16,7 @@ var damage=0
 #Objetos
 var movedir = Vector2()
 var spritedir = Vector2()
-var hurt_ref=0
+var damage_dealt=0
 
 	
 #funcion que checkea el estado del personaje para mostrar animaciones
@@ -30,7 +30,7 @@ func _physics_process(delta):
 	_movement_loop()
 	_controls_loop()
 	_staminastate_loop()
-	_healthstate_loop(hurt_ref)
+	_healthstate_loop(damage_dealt)
 	_spritedir_loop()
 	_animloader_loop(delta)
 	#TODO: _spritestate_loop()
@@ -57,10 +57,14 @@ func _movement_loop():
 		var linear_velocity
 		var floor_normal = Vector2(0,0)
 		if is_on_wall():
-			hurt(50)
-		if input.hide():		
+			hurt(2)
+		if input.hide():
+			print ("pressed")
+			hurt(1)
 			linear_velocity = movedir.normalized() * HIDE_SPEED
 		else:
+			damage_dealt=0
+			print("not pressing hide")
 			linear_velocity = movedir.normalized() * SPEED
 		move_and_slide(linear_velocity, floor_normal)
 
@@ -78,7 +82,7 @@ func _staminastate_loop():
 	return STAMINA
 
 #funcion que devuelve el estado de health en funcion de delta(frames)
-func _healthstate_loop(hurt_ref):
+func _healthstate_loop(damage_dealt):
 	
 	if DEATH==false:		
 		if HEALTH<=0:
@@ -86,9 +90,9 @@ func _healthstate_loop(hurt_ref):
 			DEATH=true
 			return false
 		else:
-			print ("damage: ",int(hurt_ref))
-			if hurt_ref:
-				HEALTH-=int(hurt_ref)
+			#print ("damage: ",int(damage_dealt))
+			if damage_dealt:
+				HEALTH-=int(damage_dealt)
 				print ("health after damage= ", HEALTH)
 				return HEALTH
 			print ("current health= ", HEALTH)
@@ -136,7 +140,7 @@ class input:
 	static func down():
 		return int(Input.is_action_pressed("ui_down"))
 	static func attack1():
-		return Input.is_action_pressed("ui_attack1")
+		return Input.is_action_just_pressed("ui_attack1")
 	static func hide():
 		return Input.is_action_pressed("ui_hide")
 
@@ -146,11 +150,9 @@ func movement():
 	movedir.y = -input.up() + input.down()
 
 func hurt(damage):
-	var damage_dealt
-	if damage!=0:
+	if damage>0:
 		damage_dealt=damage
 		damage=0
-		hurt_ref=damage_dealt
 		return damage_dealt
 	else:
 		return false
