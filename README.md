@@ -21,6 +21,8 @@ RELEASE 1:
   animacion attack1
 -------------------------------------------------------
 -script Player:
+  func health:  -->in progress
+    reg 1 por seg
   func attack1:
     ataque basico sin arma:
     DAMAGE=10
@@ -28,7 +30,7 @@ RELEASE 1:
     si 3 golpes seguidos en npc
       animacion attackchain
       DAMAGE=20
-  func STAMINA: 
+  func STAMINA:  -->in progress
     STAMINA=100
     regenera 1 stamina por sec
     if npc = die 
