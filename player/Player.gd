@@ -24,6 +24,8 @@ var stamina_cost=0
 var time_start = OS.get_unix_time()
 var time_now = 0
 var tired = false
+var texto_array = Array()
+var texto_valor = Array()
 
 #Objetos
 var movedir = Vector2()
@@ -49,16 +51,32 @@ func _physics_process(delta):
 	_healthRegen_loop()
 	_staminaRegen_loop()
 	_delay()
+	_consolator_printer ()
 	#print ("TIME_AUX: ",int(TIME_AUX))
 	counter+=1
 	inicio_segundo=false
 
 	#TODO: _spritestate_loop()
 	
+func _logger_ (texto,valor):
+		texto_array.append(texto)
+		if valor !=null:
+			texto_valor.append(valor)
+		else:
+			texto_valor.append("")
+
+func _consolator_printer ():
+	if inicio_segundo:
+		_logger_("--------------------------",null)
+		for i in range(0, texto_array.size()):			
+			print (texto_array[i]+": ", texto_valor[i])
+	texto_array.clear()
+	texto_valor.clear()
+	
 func _time(TIME,TIME_AUX,delta):
 	if counter == fps:
-		print ("health: ", HEALTH)
-		print ("stamina: ", STAMINA)
+		_logger_ ("health: ", HEALTH)
+		_logger_ ("stamina: ", STAMINA)
 		pretty_time()
 		counter=0
 		inicio_segundo=true	
@@ -110,8 +128,9 @@ func _spritedir_loop():
 #funcion que devueve el estado de stamina en funcion de delta(frames)
 func _staminaRegen_loop():
 	if inicio_segundo && !DEATH && !delay:
-		if STAMINA<100:
-			print ("regenerating stamina")
+		if STAMINA<100 || STAMINA == 0 && tired:
+			tired=false
+			_logger_ ("regenerating stamina",STAMINA_REGEN)
 			STAMINA+=STAMINA_REGEN
 			if STAMINA>100:
 				STAMINA=100
@@ -121,7 +140,7 @@ func _staminaRegen_loop():
 func _healthRegen_loop():
 	if inicio_segundo && !DEATH && !delay:
 		if HEALTH<100:
-			print ("regenerating health")
+			_logger_ ("regenerating health",HEALTH_REGEN)
 			HEALTH+=HEALTH_REGEN
 			if HEALTH >100:
 				HEALTH=100
@@ -131,14 +150,14 @@ func _healthRegen_loop():
 func _delay():
 	if delay && inicio_segundo:
 		delay=false
-		print ("delayStatus= ", delay)
+		_logger_ ("delayStatus= ", delay)
 		
 
 #funcion que devuelve el estado de health en funcion de delta(frames)
 func _healthstate_loop(damage_dealt):
 	if DEATH==false:
 		if HEALTH<=0:
-			print ("death")
+			_logger_ ("death", true)
 			DEATH=true
 			return false
 		else:
@@ -151,7 +170,7 @@ func _staminastate_loop(stamina_cost):
 	if DEATH==false:
 		if STAMINA<=0:
 			tired=true
-			print ("tired")
+			_logger_ ("tired",true)
 			return false
 		else:
 			if stamina_cost && !delay:
@@ -171,7 +190,7 @@ func pretty_time():
 	var minutes = elapsed / 60
 	var seconds = elapsed % 60
 	var str_elapsed = "%02d : %02d" % [minutes, seconds]
-	print("elapsed : ", str_elapsed)
+	_logger_("elapsed : ", str_elapsed)
 
 #funcion que devuelve la direccion en string
 func action_to_String(direction:Vector2) -> String:
