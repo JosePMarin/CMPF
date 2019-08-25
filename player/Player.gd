@@ -5,6 +5,7 @@ extends KinematicBody2D
 #Variables constantes
 const SPEED = 120
 const HIDE_SPEED = 40
+const TIRED_SPEED = 10
 var DEATH=false
 var HEALTH=100
 var STAMINA = 100
@@ -12,7 +13,7 @@ var TIME = 0
 var HEALTH_REGEN=1
 var STAMINA_REGEN=1
 var damage=0
-var counter=0
+var counter=30
 var TIME_AUX=0
 var delay=false
 var delay_time=0
@@ -22,6 +23,7 @@ var stamina=0
 var stamina_cost=0
 var time_start = OS.get_unix_time()
 var time_now = 0
+var tired = false
 
 #Objetos
 var movedir = Vector2()
@@ -40,12 +42,12 @@ func _physics_process(delta):
 	_time(TIME,TIME_AUX,delta)
 	_movement_loop()
 	_controls_loop()
-	_staminaRegen_loop()
 	_healthstate_loop(damage_dealt)
 	_staminastate_loop(stamina_cost)
 	_spritedir_loop()
 	_animloader_loop(delta)
 	_healthRegen_loop()
+	_staminaRegen_loop()
 	_delay()
 	#print ("TIME_AUX: ",int(TIME_AUX))
 	counter+=1
@@ -55,13 +57,11 @@ func _physics_process(delta):
 	
 func _time(TIME,TIME_AUX,delta):
 	if counter == fps:
-		print ("health: ",HEALTH)
+		print ("health: ", HEALTH)
+		print ("stamina: ", STAMINA)
 		pretty_time()
 		counter=0
-		inicio_segundo=true
-
-func _staminastate_loop(stamina_cost):
-	pass
+		inicio_segundo=true	
 	
 #funcion que cambia la animacion en funcion del entorno
 func _animloader_loop(delta):
@@ -89,12 +89,18 @@ func _movement_loop():
 		else:
         	damage_dealt=0
 		if input.hide():
-			hurt(1)
+			tired(1)
 			linear_velocity = movedir.normalized() * HIDE_SPEED
+		elif tired==true:
+			hurt(1)
+			linear_velocity = movedir.normalized() * TIRED_SPEED
 		else:
+			stamina_cost=0
 			hurt(0)
 			linear_velocity = movedir.normalized() * SPEED
 		move_and_slide(linear_velocity, floor_normal)
+		
+		
 
 #funcion que checkea si movedir se mueve y no es infinito para actualizar la posicion del spirte
 func _spritedir_loop():
@@ -109,8 +115,7 @@ func _staminaRegen_loop():
 			STAMINA+=STAMINA_REGEN
 			if STAMINA>100:
 				STAMINA=100
-			print ("STAMINA actual: ", int(STAMINA))
-
+			
 
 #funcion que devueve el health de stamina en funcion de delta(frames)
 func _healthRegen_loop():
@@ -120,7 +125,7 @@ func _healthRegen_loop():
 			HEALTH+=HEALTH_REGEN
 			if HEALTH >100:
 				HEALTH=100
-			print ("HEALTH actual: ",int(HEALTH))
+			
 
 #funcion que devueve el health de stamina en funcion de delta(frames)
 func _delay():
@@ -131,7 +136,7 @@ func _delay():
 
 #funcion que devuelve el estado de health en funcion de delta(frames)
 func _healthstate_loop(damage_dealt):
-	if DEATH==false:		
+	if DEATH==false:
 		if HEALTH<=0:
 			print ("death")
 			DEATH=true
@@ -139,10 +144,21 @@ func _healthstate_loop(damage_dealt):
 		else:
 			if damage_dealt && !delay:
 				HEALTH-=int(damage_dealt)
-				print ("health after damage= ", HEALTH)
 				delay=true
-				print ("delayStatus= ", delay)
 				return HEALTH
+
+func _staminastate_loop(stamina_cost):
+	if DEATH==false:
+		if STAMINA<=0:
+			tired=true
+			print ("tired")
+			return false
+		else:
+			if stamina_cost && !delay:
+				STAMINA-=int(stamina_cost)
+				delay=true
+				return STAMINA
+		
 
 
 ################## MEMBER FUNCTIONS ##########################
