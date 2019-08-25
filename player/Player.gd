@@ -78,7 +78,7 @@ func _movement_loop():
 		if is_on_wall():
 			hurt(10)
 		else:
-          	hurt(0)           
+        	damage_dealt=0
 		if input.hide():
 			linear_velocity = movedir.normalized() * HIDE_SPEED
 		else:
