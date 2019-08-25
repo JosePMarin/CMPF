@@ -9,8 +9,8 @@ var DEATH=false
 var HEALTH=100
 var STAMINA = 100
 var TIME = 0
-var HEALTH_REGEN=2
-var STAMINA_REGEN=2
+var HEALTH_REGEN=1
+var STAMINA_REGEN=1
 var damage=0
 var counter=0
 var TIME_AUX=0
@@ -36,7 +36,7 @@ func _physics_process(delta):
 	_print_tiempo(TIME,TIME_AUX,delta)
 	_movement_loop()
 	_controls_loop()
-	_staminastate_loop()
+	_staminaRegen_loop()
 	_healthstate_loop(damage_dealt)
 	_spritedir_loop()
 	_animloader_loop(delta)
@@ -51,6 +51,7 @@ func _physics_process(delta):
 func _print_tiempo(TIME,TIME_AUX,delta):
 	if counter == fps:
 		print ("TIEMPO: ",int(TIME))
+		print ("health: ",HEALTH)
 		counter=0
 		inicioSegundo=true
 
@@ -83,6 +84,7 @@ func _movement_loop():
 			hurt(1)
 			linear_velocity = movedir.normalized() * HIDE_SPEED
 		else:
+			hurt(0)
 			linear_velocity = movedir.normalized() * SPEED
 		move_and_slide(linear_velocity, floor_normal)
 
@@ -92,12 +94,12 @@ func _spritedir_loop():
 		spritedir = movedir
 
 #funcion que devueve el estado de stamina en funcion de delta(frames)
-func _staminastate_loop():
-	if STAMINA<100:
-		#print ("regenerating stamina")
-		STAMINA+=STAMINA_REGEN
-	#print ("stamina= ", STAMINA)
-	return STAMINA
+func _staminaRegen_loop():
+	if inicioSegundo:
+		if STAMINA<100:
+			#print ("regenerating stamina")
+			STAMINA+=STAMINA_REGEN
+
 
 #funcion que devueve el health de stamina en funcion de delta(frames)
 func _healthRegen_loop():
@@ -117,15 +119,15 @@ func _hurted_delay():
 		
 
 #funcion que devuelve el estado de health en funcion de delta(frames)
-func _healthstate_loop(hurt_ref):
-	if DEATH==false:
+func _healthstate_loop(damage_dealt):
+	if DEATH==false:		
 		if HEALTH<=0:
 			print ("death")
 			DEATH=true
 			return false
 		else:
-			if hurt_ref && !hurted:
-				HEALTH-=int(hurt_ref)
+			if damage_dealt && !hurted:
+				HEALTH-=int(damage_dealt)
 				print ("health after damage= ", HEALTH)
 				hurted=true
 				print ("hurtedStatus= ", hurted)
