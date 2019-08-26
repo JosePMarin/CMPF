@@ -14,6 +14,8 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="KinematicBody2D" type="KinematicBody2D" parent="TileMap"]
+
 [node name="Player" parent="TileMap" instance=ExtResource( 2 )]
 position = Vector2( 104, 132 )
 

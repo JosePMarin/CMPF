@@ -40,7 +40,6 @@ var movedir = Vector2()
 var spritedir = Vector2()
 
 
-
 #funcion que checkea el estado del personaje para mostrar animaciones
 func _ready():
 	pass
@@ -62,7 +61,6 @@ func _physics_process(delta):
 	counterFps += 1
 	inicio_segundo = false
 	
-
 #funcion _status_control_end_
 func _status_control():
 	if inicio_segundo:
@@ -122,13 +120,11 @@ func _animloader_loop(delta):
 		anim_switch("Idle")
 
 
-
-
 #######################################################
 ################## FUNCTIONS ##########################
 #######################################################
 
-#funcion tired
+#funcion que modifica el estado de stamina en funcion de condiciones del entorno
 func stamina_modifier(STAMINA_MOD):
 	if inicio_segundo:
 		if STAMINA_MOD>0:
@@ -157,8 +153,8 @@ func health_modifier(HEALTH_MOD):
 			if HEALTH>MAX_HEALTH:
 				HEALTH=MAX_HEALTH			
 			return HEALTH
-		else:		
-			return false
+	else:		
+		return false
 
 #funcion que manda una señal al programa
 func die():
@@ -167,7 +163,6 @@ func die():
 		#todo: cargar animacion muerte
 		return true
 	return false
-
 
 #funcion que describe el movimiento
 func movement():
@@ -218,8 +213,6 @@ func _consolator_printer ():
 			print (logger_text[i]+": ", logger_value[i])
 	logger_text.clear()
 	logger_value.clear()
-
-
 
 #funcion que devuelve la direccion en string
 func action_to_String(direction:Vector2) -> String:
