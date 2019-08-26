@@ -108,7 +108,7 @@ func _movement_loop():
 		if TIRED==true:
 			linear_velocity = movedir.normalized() * TIRED_SPEED
 		if input.hide() == false && TIRED == false:			
-			linear_velocity = movedir.normalized() * SPEED	
+			linear_velocity = movedir.normalized() * SPEED
 		move_and_slide(linear_velocity, floor_normal)
 		
 #funcion que altera el movimiento en funcion de los inputs de teclado: proyecto/ajustes/mapa_de_entrada
@@ -262,7 +262,7 @@ func action_to_String(direction:Vector2) -> String:
 		return "Down"
 	if input.hide():
 		return "Hide"
-	if die():
+	if DEATH:
 		return "Die" #TODO: create "Die" animation
 	return "Down" #TODO: create "Idle" animation  
 
