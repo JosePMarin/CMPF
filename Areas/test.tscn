@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Tiles/wal2l.tres" type="TileSet" id=1]
-[ext_resource path="res://player/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://NPCs/Vampiro.tscn" type="PackedScene" id=2]
+[ext_resource path="res://player/Player.tscn" type="PackedScene" id=3]
 
 [node name="Node2D" type="Node2D"]
 
@@ -14,9 +15,9 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="KinematicBody2D" type="KinematicBody2D" parent="TileMap"]
+[node name="Vampiro" parent="TileMap" instance=ExtResource( 2 )]
 
-[node name="Player" parent="TileMap" instance=ExtResource( 2 )]
+[node name="Player" parent="TileMap" instance=ExtResource( 3 )]
 position = Vector2( 104, 132 )
 
 [node name="Camera2D" type="Camera2D" parent="TileMap/Player"]
