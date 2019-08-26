@@ -131,12 +131,16 @@ func _animloader_loop(delta):
 #funcion tired
 func stamina_modifier(STAMINA_MOD):
 	if inicio_segundo:
-		STAMINA += STAMINA_MOD
-		if (STAMINA <= 0):
-			STAMINA = 0;
-		elif STAMINA > 100:
-			STAMINA = 100
-		return STAMINA
+		if STAMINA_MOD>0:
+			STAMINA += STAMINA_MOD
+			if STAMINA > 100:
+				STAMINA = 100
+			return STAMINA
+		if STAMINA_MOD<0:
+			STAMINA += STAMINA_MOD
+			if (STAMINA <= 0):
+				STAMINA = 0
+			return STAMINA	
 	else:
 		return false
 
