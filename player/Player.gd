@@ -23,8 +23,8 @@ var delay=false
 var TIRED = false
 
 #Variables status
-var DAMAGE = 0
-var stamina = 0
+var HEALTH_MOD = 0
+var STAMINA_MOD = 0
 
 #Variables entorno
 var TIME = 0
@@ -66,25 +66,21 @@ func _physics_process(delta):
 #funcion _status_control_end_
 func _status_control():
 	if inicio_segundo:
-			
+		# TODO modificadores del daño			
 		if (HEALTH <= 0):
-			DEATH = true
-		
+			DEATH = true		
 		if TIRED && !input.hide():
-			stamina(1)
-
-		if (STAMINA <= 0):
+			stamina_modifier(1)
+		if (STAMINA == 0):
 			TIRED = true
-			heal(-1)
-
+			health_modifier(-1)
 		if (STAMINA < MAX_STAMINA && STAMINA > 0 && !input.hide()):
 			TIRED = false
 			_logger_ ("regenerating stamina", STAMINA_REGEN)
-			stamina(STAMINA_REGEN)
-
+			stamina_modifier(STAMINA_REGEN)
 		if (HEALTH < MAX_HEALTH && HEALTH > 0 && !TIRED):
 			_logger_ ("regenerating health", HEALTH_REGEN)
-			heal(HEALTH_REGEN)
+			health_modifier(HEALTH_REGEN)
 		_logger_ ("TIRED stamina", TIRED)
 
 #funcion que aplica el movimiento introducido (por _controls_loop()) y normalizado a la constante SPEED
@@ -94,9 +90,9 @@ func _movement_loop():
 		var floor_normal = Vector2(0,0)
 
 		if is_on_wall():
-			hurt(10)
+			health_modifier(-10)
 		if input.hide():
-			stamina(-1)
+			stamina_modifier(-1)
 			linear_velocity = movedir.normalized() * HIDE_SPEED
 		if TIRED==true:
 			linear_velocity = movedir.normalized() * TIRED_SPEED
@@ -133,9 +129,9 @@ func _animloader_loop(delta):
 #######################################################
 
 #funcion tired
-func stamina(stamina):
+func stamina_modifier(STAMINA_MOD):
 	if inicio_segundo:
-		STAMINA += stamina
+		STAMINA += STAMINA_MOD
 		if (STAMINA <= 0):
 			STAMINA = 0;
 		elif STAMINA > 100:
@@ -144,27 +140,23 @@ func stamina(stamina):
 	else:
 		return false
 
-#funcion hurt
-func hurt(DAMAGE):
+#funcion que modifica el estado de health en funcion de condiciones del entorno
+func health_modifier(HEALTH_MOD):
 	if inicio_segundo:
-		if DAMAGE>0:
-			# TODO modificadores del daño
-			heal (- DAMAGE)
-			return DAMAGE
+		if HEALTH_MOD<0:
+			HEALTH+=HEALTH_MOD
+			if HEALTH>MAX_HEALTH:
+				HEALTH=MAX_HEALTH
+			return HEALTH
+		if HEALTH_MOD>0:
+			HEALTH+=HEALTH_MOD
+			if HEALTH<0:
+				HEALTH=0
+			return HEALTH
 		else:		
 			return false
-		
-#funcion hurt
-func heal(heal):
-	if inicio_segundo:
-		HEALTH += heal
-		if (HEALTH <= 0):
-			HEALTH = 0
-		elif HEALTH > 100:
-			HEALTH = 100
-		return HEALTH
 
-#funcion die
+#funcion que manda una señal al programa
 func die():
 	if DEATH == true:
 		set_physics_process(false)
@@ -178,7 +170,7 @@ func movement():
 	movedir.x = -input.left() + input.right()
 	movedir.y = -input.up() + input.down()
 
-#funcion delay
+#funcion para sincronizar las acciones con el tiempo real
 func _delay():
 	if delay && inicio_segundo:
 		delay=false
@@ -188,7 +180,7 @@ func _delay():
 
 ################## UTILS FUNCTIONS ##########################
 
-#funcion tiempo
+#funcion que printea en log el stamina y health (TODO sustituir esto por conexiones con healthbar y staminabar) y el tiempo forma formateada
 func _time():
 	if counterFps == fps:
 		_logger_ ("health: ", HEALTH)
@@ -197,7 +189,7 @@ func _time():
 		counterFps=0
 		inicio_segundo=true	
 
-#funcion pretty_time
+#funcion que printea la informacion de tiempo de manera formateada
 func pretty_time():
 	time_now = OS.get_unix_time()
 	var elapsed = time_now - time_start
@@ -206,7 +198,7 @@ func pretty_time():
 	var str_elapsed = "%02d : %02d" % [minutes, seconds]
 	_logger_("elapsed : ", str_elapsed)
 
-#funcion _logger_
+#funcion que almacena en un array los mensajes para enviar al log
 func _logger_ (texto,valor):
 	logger_text.append(texto)
 	if valor !=null:
@@ -214,7 +206,7 @@ func _logger_ (texto,valor):
 	else:
 		logger_value.append("")
 
-#funcion _consolator_printer
+#funcion que formatea los mensajes printeados por _logger_()
 func _consolator_printer ():
 	if inicio_segundo:
 		_logger_("--------------------------", null)
@@ -247,7 +239,6 @@ func anim_switch(anim):
 	if $Anim.current_animation != newanim:
 		$Anim.play(newanim)
 		
-
 #funcion que devuelve el input de teclado
 class input:
 	static func left():
