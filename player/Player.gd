@@ -12,7 +12,7 @@ const MAX_MANA = 50
 var MANA = 5
 var MANA_REGEN = 1
 # STAMINA
-const MAX_STAMINA = 100
+const MAX_STAMINA = 10
 var STAMINA = 5
 var STAMINA_REGEN = 5
 # HEALTH
