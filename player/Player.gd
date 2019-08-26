@@ -226,7 +226,7 @@ func action_to_String(direction:Vector2) -> String:
 		return "Down"
 	if input.hide():
 		return "Hide"
-	if die():
+	if DEATH:
 		return "Die" #TODO: create "Die" animation
 	return "Down" #TODO: create "Idle" animation  
 
