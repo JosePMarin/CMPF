@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://icon.png" type="Texture" id=1]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 5.2435, 8.79344 )
+
+[node name="Vampiro" type="KinematicBody2D"]
+
+[node name="Position2D" type="Position2D" parent="."]
+position = Vector2( 230.358, 197.385 )
+
+[node name="icon" type="Sprite" parent="Position2D"]
+position = Vector2( -0.192108, -8.51567 )
+scale = Vector2( 0.192243, 0.313555 )
+texture = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 230.278, 188.788 )
+shape = SubResource( 1 )
