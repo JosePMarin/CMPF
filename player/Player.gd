@@ -8,7 +8,7 @@ const SPEED = 120
 const HIDE_SPEED = 40
 const TIRED_SPEED = 10
 # STAMINA
-const MAX_STAMINA = 5
+const MAX_STAMINA = 100
 var STAMINA = 5
 var STAMINA_REGEN = 1
 # HEALTH
@@ -23,10 +23,8 @@ var delay=false
 var TIRED = false
 
 #Variables status
-var damage = 0
-var damage_dealt = 0
+var DAMAGE = 0
 var stamina = 0
-var stamina_cost = 0
 
 #Variables entorno
 var TIME = 0
@@ -147,13 +145,14 @@ func stamina(stamina):
 		return false
 
 #funcion hurt
-func hurt(damage):
-	if  inicio_segundo && damage != 0 && damage > 0:
-		# TODO modificadores del daño
-		heal (- damage)
-		return damage
-	else:		
-		return false
+func hurt(DAMAGE):
+	if inicio_segundo:
+		if DAMAGE>0:
+			# TODO modificadores del daño
+			heal (- DAMAGE)
+			return DAMAGE
+		else:		
+			return false
 		
 #funcion hurt
 func heal(heal):
