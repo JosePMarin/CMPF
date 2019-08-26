@@ -64,7 +64,7 @@ func _physics_process(delta):
 #funcion _status_control_end_
 func _status_control():
 	if inicio_segundo:
-		# TODO modificadores del daño			
+		# TODO modificadores del daño
 		if (HEALTH <= 0):
 			DEATH = true		
 		if TIRED && !input.hide():
@@ -95,7 +95,7 @@ func _movement_loop():
 		if TIRED==true:
 			linear_velocity = movedir.normalized() * TIRED_SPEED
 		if input.hide() == false && TIRED == false:			
-			linear_velocity = movedir.normalized() * SPEED	
+			linear_velocity = movedir.normalized() * SPEED
 		move_and_slide(linear_velocity, floor_normal)
 		
 #funcion que altera el movimiento en funcion de los inputs de teclado: proyecto/ajustes/mapa_de_entrada
