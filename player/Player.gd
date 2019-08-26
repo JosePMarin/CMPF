@@ -149,13 +149,13 @@ func health_modifier(HEALTH_MOD):
 	if inicio_segundo:
 		if HEALTH_MOD<0:
 			HEALTH+=HEALTH_MOD
-			if HEALTH>MAX_HEALTH:
-				HEALTH=MAX_HEALTH
+			if HEALTH<0:
+				HEALTH=0
 			return HEALTH
 		if HEALTH_MOD>0:
 			HEALTH+=HEALTH_MOD
-			if HEALTH<0:
-				HEALTH=0
+			if HEALTH>MAX_HEALTH:
+				HEALTH=MAX_HEALTH			
 			return HEALTH
 		else:		
 			return false
