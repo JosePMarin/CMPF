@@ -7,10 +7,14 @@ extends KinematicBody2D
 const SPEED = 120
 const HIDE_SPEED = 40
 const TIRED_SPEED = 10
+# MANA
+const MAX_MANA = 50
+var MANA = 5
+var MANA_REGEN = 1
 # STAMINA
 const MAX_STAMINA = 100
 var STAMINA = 5
-var STAMINA_REGEN = 1
+var STAMINA_REGEN = 5
 # HEALTH
 const MAX_HEALTH = 100
 var HEALTH = 100
@@ -21,10 +25,13 @@ var inicio_segundo=false
 var DEATH=false
 var delay=false
 var TIRED = false
+var DEBUG = true
 
 #Variables status
 var HEALTH_MOD = 0
 var STAMINA_MOD = 0
+var STAMINA_COST_HIDE = 2
+var WALL_DAMAGE = 10
 
 #Variables entorno
 var TIME = 0
@@ -63,23 +70,29 @@ func _physics_process(delta):
 	
 #funcion _status_control_end_
 func _status_control():
-	if inicio_segundo:
-		# TODO modificadores del daño			
-		if (HEALTH <= 0):
-			DEATH = true		
-		if TIRED && !input.hide():
-			stamina_modifier(1)
-		if (STAMINA == 0):
-			TIRED = true
-			health_modifier(-1)
-		if (STAMINA < MAX_STAMINA && STAMINA > 0 && !input.hide()):
-			TIRED = false
-			_logger_ ("regenerating stamina", STAMINA_REGEN)
-			stamina_modifier(STAMINA_REGEN)
-		if (HEALTH < MAX_HEALTH && HEALTH > 0 && !TIRED):
-			_logger_ ("regenerating health", HEALTH_REGEN)
-			health_modifier(HEALTH_REGEN)
-		_logger_ ("TIRED stamina", TIRED)
+	if inicio_segundo && DEBUG:
+		
+		# input.hide() function
+		_heath_stamina_control()
+		# TODO modificadores del daño
+	
+
+		# Funcion del input.hide()
+func _heath_stamina_control():
+	if (HEALTH <= 0):
+		DEATH = true		
+	if TIRED && !input.hide():
+		stamina_modifier(1)
+	if (STAMINA == 0):
+		TIRED = true
+		health_modifier(-1)
+	if (STAMINA < MAX_STAMINA && STAMINA > 0 && !input.hide()):
+		TIRED = false
+		_logger_ ("regenerating stamina", STAMINA_REGEN)
+		stamina_modifier(STAMINA_REGEN)
+	if (HEALTH < MAX_HEALTH && HEALTH > 0 && !TIRED):
+		_logger_ ("regenerating health", HEALTH_REGEN)
+		health_modifier(HEALTH_REGEN)
 
 #funcion que aplica el movimiento introducido (por _controls_loop()) y normalizado a la constante SPEED
 func _movement_loop():
@@ -88,9 +101,9 @@ func _movement_loop():
 		var floor_normal = Vector2(0,0)
 
 		if is_on_wall():
-			health_modifier(-10)
+			health_modifier(-WALL_DAMAGE)
 		if input.hide():
-			stamina_modifier(-1)
+			stamina_modifier(-STAMINA_COST_HIDE)
 			linear_velocity = movedir.normalized() * HIDE_SPEED
 		if TIRED==true:
 			linear_velocity = movedir.normalized() * TIRED_SPEED
@@ -127,14 +140,14 @@ func _animloader_loop(delta):
 #funcion que modifica el estado de stamina en funcion de condiciones del entorno
 func stamina_modifier(STAMINA_MOD):
 	if inicio_segundo:
-		if STAMINA_MOD>0:
+		if STAMINA_MOD > 0:
 			STAMINA += STAMINA_MOD
 			if STAMINA > 100:
 				STAMINA = MAX_HEALTH
 			return STAMINA
 		if STAMINA_MOD<0:
 			STAMINA += STAMINA_MOD
-			if (STAMINA <= 0):
+			if STAMINA <= 0:
 				STAMINA = 0
 			return STAMINA	
 	else:
@@ -143,19 +156,34 @@ func stamina_modifier(STAMINA_MOD):
 #funcion que modifica el estado de health en funcion de condiciones del entorno
 func health_modifier(HEALTH_MOD):
 	if inicio_segundo:
-		if HEALTH_MOD<0:
-			HEALTH+=HEALTH_MOD
-			if HEALTH<0:
-				HEALTH=0
+		if HEALTH_MOD < 0:
+			HEALTH += HEALTH_MOD
+			if HEALTH < 0:
+				HEALTH = 0
 			return HEALTH
-		if HEALTH_MOD>0:
-			HEALTH+=HEALTH_MOD
-			if HEALTH>MAX_HEALTH:
-				HEALTH=MAX_HEALTH			
+		if HEALTH_MOD > 0:
+			HEALTH += HEALTH_MOD
+			if HEALTH > MAX_HEALTH:
+				HEALTH = MAX_HEALTH			
 			return HEALTH
 	else:		
 		return false
 
+#funcion que modifica el estado de MANA en funcion de condiciones del entorno
+func mana_modifier(MANA_MOD):
+	if inicio_segundo:
+		if MANA_MOD < 0:
+			MANA += MANA_MOD
+			if MANA < 0:
+				MANA=0
+			return MANA
+		if MANA_MOD > 0:
+			MANA += MANA_MOD
+			if MANA > MAX_MANA:
+				MANA = MAX_MANA			
+			return MANA
+	else:		
+		return false
 #funcion que manda una señal al programa
 func die():
 	if DEATH == true:
@@ -182,8 +210,10 @@ func _delay():
 #funcion que printea en log el stamina y health (TODO sustituir esto por conexiones con healthbar y staminabar) y el tiempo forma formateada
 func _time():
 	if counterFps == fps:
+		_logger_("-----------", "ESTADO:-----------")
 		_logger_ ("health: ", HEALTH)
 		_logger_ ("stamina: ", STAMINA)
+		_logger_ ("mana: ", MANA)
 		pretty_time()
 		counterFps=0
 		inicio_segundo=true	
@@ -207,12 +237,18 @@ func _logger_ (texto,valor):
 
 #funcion que formatea los mensajes printeados por _logger_()
 func _consolator_printer ():
-	if inicio_segundo:
-		_logger_("--------------------------", null)
+	if inicio_segundo:		
+		_print_status ()
 		for i in range(0, logger_text.size()):			
 			print (logger_text[i]+": ", logger_value[i])
+	
 	logger_text.clear()
 	logger_value.clear()
+
+func _print_status ():
+	_logger_("-----------", "MODIFICADORES:-----------")
+	_logger_ ("TIRED ", TIRED)
+	_logger_ ("DEATH ", DEATH)
 
 #funcion que devuelve la direccion en string
 func action_to_String(direction:Vector2) -> String:
