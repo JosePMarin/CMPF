@@ -134,7 +134,7 @@ func stamina_modifier(STAMINA_MOD):
 		if STAMINA_MOD>0:
 			STAMINA += STAMINA_MOD
 			if STAMINA > 100:
-				STAMINA = 100
+				STAMINA = MAX_HEALTH
 			return STAMINA
 		if STAMINA_MOD<0:
 			STAMINA += STAMINA_MOD
