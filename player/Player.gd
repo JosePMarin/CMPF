@@ -1,38 +1,50 @@
 #Librerias
 extends KinematicBody2D
 
+#Player
 
-#Variables constantes
+# SPEED
 const SPEED = 120
 const HIDE_SPEED = 40
 const TIRED_SPEED = 10
-var DEATH=false
-var HEALTH=100
-var STAMINA = 10
-var TIME = 0
-var HEALTH_REGEN=1
-var STAMINA_REGEN=1
-var damage=0
-var counter=30
-var TIME_AUX=0
-var delay=false
-var delay_time=0
-var fps= 60
+# STAMINA
+const MAX_STAMINA = 5
+var STAMINA = 5
+var STAMINA_REGEN = 1
+# HEALTH
+const MAX_HEALTH = 100
+var HEALTH = 100
+var HEALTH_REGEN = 1
+
+#Booleanos
 var inicio_segundo=false
-var stamina=0
-var stamina_cost=0
+var DEATH=false
+var delay=false
+var tired = false
+
+#Variables status
+
+var damage = 0
+var damage_dealt = 0
+var delay_time = 0
+var stamina = 0
+var stamina_cost = 0
+
+#Variables entorno
+var TIME = 0
+var counterFps = 30
+var fps = 60
 var time_start = OS.get_unix_time()
 var time_now = 0
-var tired = false
-var texto_array = Array()
-var texto_valor = Array()
+var logger_text = Array()
+var logger_value = Array()
 
 #Objetos
 var movedir = Vector2()
 var spritedir = Vector2()
-var damage_dealt=0
 
-	
+
+
 #funcion que checkea el estado del personaje para mostrar animaciones
 func _ready():
 	pass
@@ -41,7 +53,7 @@ func _ready():
 #funcion que controla el movimiento y las animaciones
 func _physics_process(delta):
 	TIME+=delta
-	_time(TIME,TIME_AUX,delta)
+	_time()
 	_movement_loop()
 	_controls_loop()
 	_healthstate_loop(damage_dealt)
@@ -51,34 +63,17 @@ func _physics_process(delta):
 	_healthRegen_loop()
 	_staminaRegen_loop()
 	_delay()
-	_consolator_printer ()
-	#print ("TIME_AUX: ",int(TIME_AUX))
-	counter+=1
-	inicio_segundo=false
-
+	_consolator_printer ()	
+	counterFps += 1
+	inicio_segundo = false
 	#TODO: _spritestate_loop()
-	
-func _logger_ (texto,valor):
-		texto_array.append(texto)
-		if valor !=null:
-			texto_valor.append(valor)
-		else:
-			texto_valor.append("")
 
-func _consolator_printer ():
-	if inicio_segundo:
-		_logger_("--------------------------",null)
-		for i in range(0, texto_array.size()):			
-			print (texto_array[i]+": ", texto_valor[i])
-	texto_array.clear()
-	texto_valor.clear()
-	
-func _time(TIME,TIME_AUX,delta):
-	if counter == fps:
+func _time():
+	if counterFps == fps:
 		_logger_ ("health: ", HEALTH)
 		_logger_ ("stamina: ", STAMINA)
 		pretty_time()
-		counter=0
+		counterFps=0
 		inicio_segundo=true	
 	
 #funcion que cambia la animacion en funcion del entorno
@@ -113,7 +108,7 @@ func _movement_loop():
 		if tired==true:
 			hurt(1)
 			linear_velocity = movedir.normalized() * TIRED_SPEED
-		if input.hide()==false && tired==false:
+		if input.hide() == false && tired == false:
 			tired(0)
 			hurt(0)
 			linear_velocity = movedir.normalized() * SPEED	
@@ -129,20 +124,20 @@ func _spritedir_loop():
 #funcion que devueve el estado de stamina en funcion de delta(frames)
 func _staminaRegen_loop():
 	if inicio_segundo && !DEATH && !delay:
-		if STAMINA<100 && tired==false:
+		if STAMINA < MAX_STAMINA && tired==false:
 			_logger_ ("regenerating stamina", STAMINA_REGEN)
-			STAMINA+=STAMINA_REGEN
-		elif STAMINA>100:
-			STAMINA=100
+			STAMINA += STAMINA_REGEN
+		elif STAMINA > MAX_STAMINA:
+			STAMINA = MAX_STAMINA
 			
 #funcion que devueve el health de stamina en funcion de delta(frames)
 func _healthRegen_loop():
 	if inicio_segundo && !DEATH && !delay:
-		if HEALTH<100:
+		if HEALTH < MAX_HEALTH:
 			_logger_ ("regenerating health",HEALTH_REGEN)
-			HEALTH+=HEALTH_REGEN
-			if HEALTH >100:
-				HEALTH=100
+			HEALTH += HEALTH_REGEN
+			if HEALTH > MAX_HEALTH:
+				HEALTH = MAX_HEALTH
 			
 
 #funcion que devueve el health de stamina en funcion de delta(frames)
@@ -191,6 +186,20 @@ func _staminastate_loop(stamina_cost):
 
 ################## MEMBER FUNCTIONS ##########################
 
+func _logger_ (texto,valor):
+	logger_text.append(texto)
+	if valor !=null:
+		logger_value.append(valor)
+	else:
+		logger_value.append("")
+
+func _consolator_printer ():
+	if inicio_segundo:
+		_logger_("--------------------------", null)
+		for i in range(0, logger_text.size()):			
+			print (logger_text[i]+": ", logger_value[i])
+	logger_text.clear()
+	logger_value.clear()
 
 #funcion tiempo
 func pretty_time():
