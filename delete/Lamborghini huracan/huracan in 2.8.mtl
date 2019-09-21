@@ -1,0 +1,185 @@
+# Blender MTL File: 'huracan in 2.8.blend'
+# Material Count: 16
+
+newmtl Material
+Ns 900.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.301345 0.301345 0.301345
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Material.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump C:\\Users\\Agustin\\Desktop\\Neuer Ordner\\Material_Normal_OpenGL.png
+map_Ns C:\\Users\\Agustin\\Desktop\\Neuer Ordner\\Material_Roughness.png
+refl C:\\Users\\Agustin\\Desktop\\Neuer Ordner\\Material_Metallic.png
+
+newmtl dark_metal
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump C:\\Users\\Agustin\\Desktop\\neu nwuzu\\dark metal_Normal_OpenGL.png
+map_Ns C:\\Users\\Agustin\\Desktop\\neu nwuzu\\dark metal_Roughness.png
+refl C:\\Users\\Agustin\\Desktop\\neu nwuzu\\dark metal_Metallic.png
+
+newmtl emmission_front
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl emssion
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl exhaust
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump C:\\Users\\Agustin\\Desktop\\Neuer Ordner\\exhaust_Normal_OpenGL.png
+map_Ns C:\\Users\\Agustin\\Desktop\\Neuer Ordner\\exhaust_Roughness.png
+refl C:\\Users\\Agustin\\Desktop\\Neuer Ordner\\exhaust_Metallic.png
+
+newmtl glass
+Ns 900.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump C:\\Users\\Agustin\\Desktop\\Neuer Ordner\\glass_Normal.png
+map_Ns C:\\Users\\Agustin\\Desktop\\Neuer Ordner\\glass_Roughness.png
+refl C:\\Users\\Agustin\\Desktop\\Neuer Ordner\\glass_Metallic.png
+
+newmtl lgo
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump C:\\Users\\Agustin\\Desktop\\neu nwuzu\\lgo_Normal_OpenGL.png
+map_Ns C:\\Users\\Agustin\\Desktop\\neu nwuzu\\lgo_Roughness.png
+refl C:\\Users\\Agustin\\Desktop\\neu nwuzu\\lgo_Metallic.png
+
+newmtl light_metal
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump C:\\Users\\Agustin\\Desktop\\neu nwuzu\\light metal_Normal_OpenGL.png
+map_Ns C:\\Users\\Agustin\\Desktop\\neu nwuzu\\light metal_Roughness.png
+refl C:\\Users\\Agustin\\Desktop\\neu nwuzu\\light metal_Metallic.png
+
+newmtl logo
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl plastic_
+Ns 81.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump C:\\Users\\Agustin\\Desktop\\Neuer Ordner\\plastic _Normal_OpenGL.png
+map_Ns C:\\Users\\Agustin\\Desktop\\Neuer Ordner\\plastic _Roughness.png
+refl C:\\Users\\Agustin\\Desktop\\Neuer Ordner\\plastic _Metallic.png
+
+newmtl red_thing
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl right_glass
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl screws_light
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl special_black
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl tire
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 3
+map_Bump C:\\Users\\Agustin\\Desktop\\neu nwuzu\\tire_Normal_OpenGL.png
+map_Ns C:\\Users\\Agustin\\Desktop\\neu nwuzu\\tire_Roughness.png
